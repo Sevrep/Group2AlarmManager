@@ -3,4 +3,6 @@
     <string name="open_time_picker">open time picker</string>
     <string name="cancel_alarm">cancel alarm</string>
     <string name="no_alarm_set">No Alarm set</string>
+    <string name="todo">TODO</string>
+    <string name="add_medication">Add Medication</string>
 </resources>

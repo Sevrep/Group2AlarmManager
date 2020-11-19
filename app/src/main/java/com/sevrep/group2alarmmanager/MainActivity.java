@@ -5,12 +5,13 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -25,21 +26,14 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         setContentView(R.layout.activity_main);
         mTextView = findViewById(R.id.textView);
         Button buttonTimePicker = findViewById(R.id.button_timepicker);
-        buttonTimePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment timePicker = new TimePickerFragment();
-                timePicker.show(getSupportFragmentManager(), "time picker");
-            }
+        buttonTimePicker.setOnClickListener(v -> {
+            DialogFragment timePicker = new TimePickerFragment();
+            timePicker.show(getSupportFragmentManager(), "time picker");
         });
         Button buttonCancelAlarm = findViewById(R.id.button_cancel);
-        buttonCancelAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelAlarm();
-            }
-        });
+        buttonCancelAlarm.setOnClickListener(v -> cancelAlarm());
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Calendar c = Calendar.getInstance();
@@ -50,10 +44,11 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         startAlarm(c);
     }
     private void updateTimeText(Calendar c) {
-        String timeText = "Alarm set for: ";
+        String timeText = "Next medication: ";
         timeText += DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
         mTextView.setText(timeText);
     }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void startAlarm(Calendar c) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, AlertReceiver.class);
@@ -68,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements TimePickerDialog.
         Intent intent = new Intent(this, AlertReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
         alarmManager.cancel(pendingIntent);
-        mTextView.setText("Alarm canceled");
+        String alarmCanceled = "Alarm canceled";
+        mTextView.setText(alarmCanceled);
     }
 }
